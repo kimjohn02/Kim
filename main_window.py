@@ -8,7 +8,7 @@ from View.posView.mainPosView import mainPosView
 from View.adminTabbedView import AdminTabbedView
 from View.colors import BACKGROUND
 
-if __name__ == "__main__":
+def main():
     app = QApplication(sys.argv)
 
     model = DataModel()
@@ -33,3 +33,7 @@ if __name__ == "__main__":
     main_window.showMaximized()
     controller.run()
     sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    main()

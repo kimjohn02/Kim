@@ -52,11 +52,12 @@ class AdminTabbedView(QWidget):
         logo_title_layout.setSpacing(12)
 
         logo_label = QLabel()
-        icon_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "T360logo.png")
+        icon_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "logo.png")
         pixmap = QPixmap(icon_path)
         if not pixmap.isNull():
-            scaled_pixmap = pixmap.scaled(45, 45, Qt.AspectRatioMode.KeepAspectRatio,
+            scaled_pixmap = pixmap.scaled(135, 135, Qt.AspectRatioMode.KeepAspectRatio,
                                           Qt.TransformationMode.SmoothTransformation)
+            scaled_pixmap.setDevicePixelRatio(3.0)
             logo_label.setPixmap(scaled_pixmap)
         logo_title_layout.addWidget(logo_label)
 

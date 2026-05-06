@@ -5,5 +5,6 @@ def get_connection():
         host="localhost",
         user="root",
         password="",
-        database="pos_system"
+        database="pos_system",
+        use_pure=True
     )

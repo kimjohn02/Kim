@@ -28,10 +28,12 @@ class mainPosView(QWidget):
         header_layout = QHBoxLayout(header_frame)
 
         logo_label = QLabel()
-        pixmap = QPixmap(r"C:\Users\kervy\Documents\Coding\IT5FinalProject\Assets\T360logo.png")
+        icon_path = os.path.join(os.path.dirname(__file__), "..", "..", "Assets", "logo.png")
+        pixmap = QPixmap(icon_path)
         if not pixmap.isNull():
-            scaled_pixmap = pixmap.scaled(45, 45, Qt.AspectRatioMode.KeepAspectRatio,
+            scaled_pixmap = pixmap.scaled(135, 135, Qt.AspectRatioMode.KeepAspectRatio,
                                           Qt.TransformationMode.SmoothTransformation)
+            scaled_pixmap.setDevicePixelRatio(3.0)
             logo_label.setPixmap(scaled_pixmap)
         logo_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         header_layout.addWidget(logo_label)
