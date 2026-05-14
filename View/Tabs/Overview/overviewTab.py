@@ -2,7 +2,7 @@ import os
 import subprocess
 import platform
 from PyQt6.QtWidgets import *
-from PyQt6.QtGui import QPixmap, QCursor
+from PyQt6.QtGui import QPixmap, QCursor, QColor, QBrush
 from View.components import *
 from .topProductCard import TopProductCard
 from .barChartWidget import BarChartWidget
@@ -49,6 +49,7 @@ class _ClickableCard(QFrame):
 class OverviewTab(QWidget):
     # Emit this to ask the main window / tabbed view to switch to the Transactions tab.
     navigate_to_transactions = pyqtSignal()
+    navigate_to_products = pyqtSignal()
 
     def __init__(self, overview_controller):
         super().__init__()
@@ -89,7 +90,33 @@ class OverviewTab(QWidget):
         self.month_selector.month_changed.connect(self.on_month_changed)
         header_layout.addWidget(self.month_selector)
 
-        export_btn = QPushButton("🖨 Export PDF")
+        action_btn_style = f"""
+            QPushButton {{
+                background-color: transparent;
+                color: {PRIMARY};
+                border: 1px solid {PRIMARY};
+                border-radius: 8px;
+                padding: 6px 12px;
+                font-family: Poppins;
+                font-size: 9pt;
+            }}
+            QPushButton:hover {{ background-color: #E8F4F5; }}
+            QPushButton:pressed {{ background-color: #DDEFF2; }}
+        """
+
+        self.quick_transactions_btn = QPushButton("View Transactions")
+        self.quick_transactions_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.quick_transactions_btn.setStyleSheet(action_btn_style)
+        self.quick_transactions_btn.clicked.connect(self._navigate_to_transactions)
+        header_layout.addWidget(self.quick_transactions_btn)
+
+        self.quick_products_btn = QPushButton("Manage Products")
+        self.quick_products_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.quick_products_btn.setStyleSheet(action_btn_style)
+        self.quick_products_btn.clicked.connect(self._navigate_to_products)
+        header_layout.addWidget(self.quick_products_btn)
+
+        export_btn = QPushButton("Export PDF")
         export_btn.setFont(QFont("Poppins", 9, QFont.Weight.Medium))
         export_btn.setFixedHeight(36)
         export_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -101,8 +128,8 @@ class OverviewTab(QWidget):
                 padding: 0 16px;
                 border: none;
             }}
-            QPushButton:hover {{ background-color: #005f68; }}
-            QPushButton:pressed {{ background-color: #004f57; }}
+            QPushButton:hover {{ background-color: {PRIMARY_HOVER}; }}
+            QPushButton:pressed {{ background-color: {PRIMARY_ACTIVE}; }}
         """)
         export_btn.clicked.connect(self.export_pdf)
         header_layout.addWidget(export_btn)
@@ -112,10 +139,11 @@ class OverviewTab(QWidget):
         # ── Stat cards ────────────────────────────────────────────────
         stats_layout = QHBoxLayout()
         stats_layout.setSpacing(12)
+        stats_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.revenue_card  = self._create_compact_stat("Today's Revenue",   "₱0.00", "💰", PRIMARY)
-        self.monthly_card  = self._create_compact_stat("Monthly Sales",     "₱0.00", "📊", "#00897B")
-        self.avg_card      = self._create_compact_stat("Avg. Transaction",  "₱0.00", "💳", "#7B1FA2")
+        self.revenue_card  = self._create_compact_stat("Today's Revenue",   "₱0.00", "₱", PRIMARY)
+        self.monthly_card  = self._create_compact_stat("Monthly Sales",     "₱0.00", "▦", "#00897B")
+        self.avg_card      = self._create_compact_stat("Avg. Transaction",  "₱0.00", "▣", "#7B1FA2")
 
         # Wire up clicks
         self.revenue_card[0].clicked.connect(self._open_today_revenue_dialog)
@@ -127,9 +155,9 @@ class OverviewTab(QWidget):
         self.monthly_card[0].setToolTip("Click to go to Transactions tab")
         self.avg_card[0].setToolTip("Click to view transaction breakdown")
 
-        stats_layout.addWidget(self.revenue_card[0])
-        stats_layout.addWidget(self.monthly_card[0])
-        stats_layout.addWidget(self.avg_card[0])
+        stats_layout.addWidget(self.revenue_card[0], 1)
+        stats_layout.addWidget(self.monthly_card[0], 1)
+        stats_layout.addWidget(self.avg_card[0], 1)
 
         main_layout.addLayout(stats_layout)
 
@@ -142,7 +170,7 @@ class OverviewTab(QWidget):
         bar_layout.setContentsMargins(16, 12, 16, 12)
         bar_layout.setSpacing(6)
 
-        bar_header = QLabel("📊 Daily Revenue (Last 7 Days)")
+        bar_header = QLabel("Daily Revenue (Last 7 Days)")
         bar_header.setFont(QFont("Poppins", 12, QFont.Weight.Bold))
         bar_header.setStyleSheet("color: #000000; background: transparent;")
         bar_layout.addWidget(bar_header)
@@ -156,7 +184,7 @@ class OverviewTab(QWidget):
         line_layout.setContentsMargins(16, 12, 16, 12)
         line_layout.setSpacing(6)
 
-        line_header = QLabel("📈 Monthly Revenue Trend")
+        line_header = QLabel("Monthly Revenue Trend")
         line_header.setFont(QFont("Poppins", 12, QFont.Weight.Bold))
         line_header.setStyleSheet("color: #000000; background: transparent;")
         line_layout.addWidget(line_header)
@@ -177,7 +205,7 @@ class OverviewTab(QWidget):
         products_layout.setContentsMargins(16, 14, 16, 14)
         products_layout.setSpacing(10)
 
-        products_header = QLabel("🏆 Top Selling Products")
+        products_header = QLabel("Top Selling Products")
         products_header.setFont(QFont("Poppins", 14, QFont.Weight.Bold))
         products_header.setStyleSheet("color: #000000; background: transparent;")
         products_layout.addWidget(products_header)
@@ -210,7 +238,7 @@ class OverviewTab(QWidget):
         inventory_layout.setContentsMargins(16, 14, 16, 14)
         inventory_layout.setSpacing(10)
 
-        inventory_header = QLabel("📦 Inventory Overview")
+        inventory_header = QLabel("Inventory Overview")
         inventory_header.setFont(QFont("Poppins", 14, QFont.Weight.Bold))
         inventory_header.setStyleSheet("color: #000000; background: transparent;")
         inventory_layout.addWidget(inventory_header)
@@ -220,6 +248,7 @@ class OverviewTab(QWidget):
 
         inv_grid = QGridLayout()
         inv_grid.setSpacing(8)
+        inv_grid.setContentsMargins(0, 0, 0, 0)
         inv_grid.setColumnStretch(0, 1)
         inv_grid.setColumnStretch(1, 1)
         inv_grid.setRowStretch(0, 1)
@@ -243,13 +272,20 @@ class OverviewTab(QWidget):
 
         alerts_panel_layout = QVBoxLayout()
         alerts_panel_layout.setSpacing(6)
+        alerts_panel_layout.setContentsMargins(0, 0, 0, 0)
 
-        alert_header = QLabel("⚠️ Stock Alerts")
+        alert_header = QLabel("Stock Alerts")
         alert_header.setFont(QFont("Poppins", 11, QFont.Weight.Bold))
         alert_header.setStyleSheet("color: #000000; background: transparent;")
         alerts_panel_layout.addWidget(alert_header)
 
+        self.alert_summary_label = QLabel()
+        self.alert_summary_label.setFont(QFont("Poppins", 9))
+        self.alert_summary_label.setStyleSheet("color: #64748B; background: transparent;")
+        alerts_panel_layout.addWidget(self.alert_summary_label)
+
         self.alert_list = QListWidget()
+        self.alert_list.setMinimumHeight(158)
         self.alert_list.setStyleSheet(f"""
             QListWidget {{
                 border: 1px solid {BACKGROUND};
@@ -264,7 +300,7 @@ class OverviewTab(QWidget):
                 padding: 8px;
                 border-radius: 6px;
                 margin: 2px 0;
-                background-color: {WHITE};
+                background-color: transparent;
                 color: black;
             }}
             QListWidget::item:hover {{ background-color: #FFF7ED; }}
@@ -297,7 +333,7 @@ class OverviewTab(QWidget):
         layout.setSpacing(12)
 
         icon_label = QLabel(icon)
-        icon_label.setFont(QFont("Segoe UI Emoji", 22))
+        icon_label.setFont(QFont("Poppins", 22))
         icon_label.setStyleSheet("background: transparent;")
         layout.addWidget(icon_label)
 
@@ -364,6 +400,10 @@ class OverviewTab(QWidget):
     def _navigate_to_transactions(self):
         """Ask the parent view to switch to the Transactions tab."""
         self.navigate_to_transactions.emit()
+
+    def _navigate_to_products(self):
+        """Ask the parent view to switch to the Product Management tab."""
+        self.navigate_to_products.emit()
 
     def _open_avg_transaction_dialog(self):
         if not self._current_transactions and not self._current_month_name:
@@ -519,10 +559,33 @@ class OverviewTab(QWidget):
         self._update_mini_stat(self.low_stock_widget,      str(stats['low_stock_count']))
         self._update_mini_stat(self.out_stock_widget,      str(stats['out_of_stock_count']))
 
+        if hasattr(self, "alert_summary_label"):
+            low = stats['low_stock_count']
+            out = stats['out_of_stock_count']
+            if low == 0 and out == 0:
+                self.alert_summary_label.setText("All items are well stocked")
+            else:
+                parts = []
+                if out:
+                    parts.append(f"{out} out of stock")
+                if low:
+                    parts.append(f"{low} low stock")
+                self.alert_summary_label.setText(" | ".join(parts))
+
     def _update_stock_alerts(self, alerts):
         self.alert_list.clear()
         for alert in alerts:
-            self.alert_list.addItem(f"{alert['icon']} {alert['message']}")
+            item = QListWidgetItem(f"{alert['icon']} {alert['message']}")
+            if alert['type'] == 'critical':
+                item.setBackground(QBrush(QColor("#FEE2E2")))
+                item.setForeground(QBrush(QColor("#991B1B")))
+            elif alert['type'] == 'warning':
+                item.setBackground(QBrush(QColor("#FEF3C7")))
+                item.setForeground(QBrush(QColor("#92400E")))
+            else:
+                item.setBackground(QBrush(QColor("#DCFCE7")))
+                item.setForeground(QBrush(QColor("#166534")))
+            self.alert_list.addItem(item)
 
     def _update_mini_stat(self, widget, value):
         for child in widget.findChildren(QLabel):

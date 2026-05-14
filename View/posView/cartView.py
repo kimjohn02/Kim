@@ -48,8 +48,8 @@ class cartView(QWidget):
         validator.setNotation(QDoubleValidator.Notation.StandardNotation)
         self.cash_input.setValidator(validator)
         self.cash_input.textChanged.connect(self.calculate_change)
-        self.cash_input.setStyleSheet("""
-            QLineEdit {
+        self.cash_input.setStyleSheet(f"""
+            QLineEdit {{
                 color: black;
                 font-family: Poppins;
                 font-size: 14px;
@@ -57,11 +57,11 @@ class cartView(QWidget):
                 padding: 10px;
                 border: 2px solid #E1E8ED;
                 border-radius: 8px;
-            }
-            QLineEdit:focus {
-                border: 2px solid #006D77;
+            }}
+            QLineEdit:focus {{
+                border: 2px solid {PRIMARY};
                 background-color: white;
-            }
+            }}
         """)
         cash_layout.addWidget(self.cash_input)
 
@@ -76,7 +76,7 @@ class cartView(QWidget):
         btn_layout = QHBoxLayout()
         btn_layout.setSpacing(10)
 
-        self.remove_btn = QPushButton("🗑 Remove Item")
+        self.remove_btn = QPushButton("Remove Item")
         self.remove_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.remove_btn.setStyleSheet(f"""
             QPushButton {{
@@ -90,10 +90,10 @@ class cartView(QWidget):
                 border: none;
             }}
             QPushButton:hover {{
-                background-color: #6FAAA4;
+                background-color: {ACCENT_HOVER};
             }}
             QPushButton:pressed {{
-                background-color: #5A9489;
+                background-color: {ACCENT_ACTIVE};
             }}
         """)
         self.remove_btn.clicked.connect(self.on_remove_from_cart)
@@ -112,10 +112,10 @@ class cartView(QWidget):
                 border: none;
             }}
             QPushButton:hover {{
-                background-color: #005662;
+                background-color: {PRIMARY_HOVER};
             }}
             QPushButton:pressed {{
-                background-color: #004a54;
+                background-color: {PRIMARY_ACTIVE};
             }}
         """)
         self.complete_btn.clicked.connect(self.on_complete_sale)
@@ -166,7 +166,7 @@ class cartView(QWidget):
             self.cart_table.setItem(i, 0, product_item)
 
             price_item = QTableWidgetItem(f"₱{item.product.price:,.2f}")
-            price_item.setForeground(QColor("#006D77"))
+            price_item.setForeground(QColor(PRIMARY))
             price_item.setFont(QFont("Poppins", 10, QFont.Weight.Bold))
             price_item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
             self.cart_table.setItem(i, 1, price_item)
@@ -178,7 +178,7 @@ class cartView(QWidget):
             self.cart_table.setItem(i, 2, qty_item)
 
             total_item = QTableWidgetItem(f"₱{item.get_total():,.2f}")
-            total_item.setForeground(QColor("#006D77"))
+            total_item.setForeground(QColor(PRIMARY))
             total_item.setFont(QFont("Poppins", 10, QFont.Weight.Bold))
             total_item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
             self.cart_table.setItem(i, 3, total_item)

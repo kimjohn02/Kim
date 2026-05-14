@@ -60,7 +60,7 @@ class TodayRevenueDialog(QDialog):
         header_inner.setContentsMargins(20, 16, 20, 16)
         header_inner.setSpacing(4)
 
-        title = QLabel("💰  Today's Revenue")
+        title = QLabel("Today's Revenue")
         title.setFont(QFont("Poppins", 18, QFont.Weight.Bold))
         title.setStyleSheet("color: white; background: transparent;")
         header_inner.addWidget(title)
@@ -189,8 +189,8 @@ class TodayRevenueDialog(QDialog):
                 border-radius: 8px;
                 border: none;
             }}
-            QPushButton:hover {{ background-color: #005662; }}
-            QPushButton:pressed {{ background-color: #004a54; }}
+            QPushButton:hover {{ background-color: {PRIMARY_HOVER}; }}
+            QPushButton:pressed {{ background-color: {PRIMARY_ACTIVE}; }}
         """)
         close_btn.clicked.connect(self.close)
 

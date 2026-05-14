@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QPainter, QColor, QPen, QBrush, QLinearGradient, QFont
 from PyQt6.QtCore import Qt
+from View.colors import *
 
 
 class BarChartWidget(QWidget):
@@ -57,8 +58,8 @@ class BarChartWidget(QWidget):
             y = padding_top + chart_h - bar_h
 
             gradient = QLinearGradient(x, y, x, y + bar_h)
-            gradient.setColorAt(0, QColor("#006D77"))
-            gradient.setColorAt(1, QColor("#83C5BE"))
+            gradient.setColorAt(0, QColor(PRIMARY))
+            gradient.setColorAt(1, QColor(ACCENT))
             painter.setBrush(QBrush(gradient))
             painter.setPen(Qt.PenStyle.NoPen)
             painter.drawRoundedRect(x, y, bar_w, bar_h, 4, 4)
@@ -69,7 +70,7 @@ class BarChartWidget(QWidget):
                              Qt.AlignmentFlag.AlignCenter, label)
 
             if val > 0:
-                painter.setPen(QPen(QColor("#006D77"), 1))
+                painter.setPen(QPen(QColor(PRIMARY), 1))
                 painter.setFont(QFont("Poppins", 6, QFont.Weight.Bold))
                 painter.drawText(x - 5, y - 14, bar_w + 10, 14,
                                  Qt.AlignmentFlag.AlignCenter, f"₱{val:,.0f}")

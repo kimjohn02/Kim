@@ -75,7 +75,7 @@ class AvgTransactionDialog(QDialog):
         h_inner.setContentsMargins(20, 14, 20, 14)
         h_inner.setSpacing(4)
 
-        title = QLabel(f"💳  Average Transaction — {self.month_name} {self.year}")
+        title = QLabel(f"Average Transaction — {self.month_name} {self.year}")
         title.setFont(QFont("Poppins", 16, QFont.Weight.Bold))
         title.setStyleSheet("color: white; background: transparent;")
         h_inner.addWidget(title)
@@ -262,8 +262,8 @@ class AvgTransactionDialog(QDialog):
                 border-radius: 8px;
                 border: none;
             }}
-            QPushButton:hover {{ background-color: #005662; }}
-            QPushButton:pressed {{ background-color: #004a54; }}
+            QPushButton:hover {{ background-color: {PRIMARY_HOVER}; }}
+            QPushButton:pressed {{ background-color: {PRIMARY_ACTIVE}; }}
         """)
         close_btn.clicked.connect(self.close)
 

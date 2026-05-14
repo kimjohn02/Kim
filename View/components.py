@@ -41,17 +41,17 @@ class PrimaryButton(QPushButton):
                 background-color: {PRIMARY};
                 color: white;
                 padding: 12px 20px;
-                border-radius: 8px;
+                border-radius: 10px;
                 font-family: Poppins;
                 font-weight: bold;
                 border: none;
                 margin: 0px;
             }}
             QPushButton:hover {{
-                background-color: #005662;
+                background-color: {PRIMARY_HOVER};
             }}
             QPushButton:pressed {{
-                background-color: #004a54;
+                background-color: {PRIMARY_ACTIVE};
             }}
         """)
 
@@ -60,13 +60,13 @@ class DeleteButton(QPushButton):
         super().__init__(text)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setMinimumHeight(40)
-        self.setMinimumWidth(120)
+        self.setMinimumWidth(110)
         self.setStyleSheet("""
             QPushButton {
-                background-color: #E63946;
+                background-color: #F87171;
                 color: white;
-                padding: 1px 1px;
-                border-radius: 6px;
+                padding: 6px 10px;
+                border-radius: 10px;
                 font-family: Poppins;
                 font-size: 9pt;
                 font-weight: bold;
@@ -74,10 +74,10 @@ class DeleteButton(QPushButton):
                 margin: 0px;
             }
             QPushButton:hover {
-                background-color: #D62828;
+                background-color: #EF4444;
             }
             QPushButton:pressed {
-                background-color: #C11119;
+                background-color: #DC2626;
             }
         """)
 
@@ -92,7 +92,7 @@ class ReactivateButton(QPushButton):
                 background-color: #28a745;
                 color: white;
                 padding: 1px 1px;
-                border-radius: 6px;
+                border-radius: 10px;
                 font-family: Poppins;
                 font-size: 9pt;
                 font-weight: bold;
@@ -118,7 +118,7 @@ class ViewButton(QPushButton):
                 background-color: {PRIMARY};
                 color: white;
                 padding: 10px 16px;
-                border-radius: 6px;
+                border-radius: 10px;
                 font-family: Poppins;
                 font-size: 9pt;
                 font-weight: bold;
@@ -126,10 +126,10 @@ class ViewButton(QPushButton):
                 margin: 0px;
             }}
             QPushButton:hover {{
-                background-color: #005662;
+                background-color: {PRIMARY_HOVER};
             }}
             QPushButton:pressed {{
-                background-color: #004a54;
+                background-color: {PRIMARY_ACTIVE};
             }}
         """)
 
@@ -139,85 +139,85 @@ class StyledInput(QLineEdit):
     def __init__(self, placeholder=""):
         super().__init__()
         self.setPlaceholderText(placeholder)
-        self.setStyleSheet("""
-            QLineEdit {
+        self.setStyleSheet(f"""
+            QLineEdit {{
                 font-family: Poppins; 
                 font-size: 10pt;
                 color: black; 
                 padding: 10px 12px; 
                 background-color: #F8FAFB; 
                 border: 2px solid #E1E8ED; 
-                border-radius: 8px;
+                border-radius: 10px;
                 margin: 0px;
-            }
-            QLineEdit:focus {
-                border: 2px solid #006D77;
+            }}
+            QLineEdit:focus {{
+                border: 2px solid {PRIMARY};
                 background-color: white;
-            }
+            }}
         """)
 
 class StyledComboBox(QComboBox):
     def __init__(self):
         super().__init__()
-        self.setStyleSheet("""
-            QComboBox {
+        self.setStyleSheet(f"""
+            QComboBox {{
                 font-family: Poppins; 
                 font-size: 10pt;
                 color: black; 
                 padding: 10px 12px; 
                 background-color: #F8FAFB; 
                 border: 2px solid #E1E8ED; 
-                border-radius: 8px;
+                border-radius: 10px;
                 margin: 0px;
-            }
-            QComboBox:focus {
-                border: 2px solid #006D77;
+            }}
+            QComboBox:focus {{
+                border: 2px solid {PRIMARY};
                 background-color: white;
-            }
-            QComboBox::drop-down {
+            }}
+            QComboBox::drop-down {{
                 border: none;
                 padding-right: 10px;
-            }
-            QComboBox::down-arrow {
+            }}
+            QComboBox::down-arrow {{
                 image: none;
                 border-left: 5px solid transparent;
                 border-right: 5px solid transparent;
-                border-top: 6px solid #006D77;
+                border-top: 6px solid {PRIMARY};
                 margin-right: 8px;
-            }
-            QComboBox QAbstractItemView {
+            }}
+            QComboBox QAbstractItemView {{
                 background-color: white;
                 color: black;
-                border: 2px solid #006D77;
-                border-radius: 8px;
+                border: 2px solid {PRIMARY};
+                border-radius: 10px;
                 selection-background-color: #E8F4F5;
                 selection-color: black;
                 padding: 5px;
                 font-family: Poppins;
-            }
+            }}
         """)
 
 class SearchInput(QLineEdit):
     """Search input field with icon"""
 
-    def __init__(self, placeholder="🔍 Search..."):
+    def __init__(self, placeholder="Search..."):
         super().__init__()
         self.setPlaceholderText(placeholder)
-        self.setStyleSheet("""
-            QLineEdit {
+        self.setStyleSheet(f"""
+            QLineEdit {{
                 font-family: Poppins; 
                 font-size: 11pt;
                 color: black; 
                 padding: 12px 15px; 
                 background-color: #F8FAFB; 
                 border: 2px solid #E1E8ED; 
-                border-radius: 8px;
+                border-radius: 10px;
                 margin: 0px;
-            }
-            QLineEdit:focus {
-                border: 2px solid #006D77;
+            }}
+            QLineEdit:focus {{
+                border: 2px solid {PRIMARY};
                 background-color: white;
-            }
+            }}
         """)
 
 # ============= TABLES =============
@@ -236,12 +236,12 @@ class StyledTable(QTableWidget):
         self.setShowGrid(False)
 
         # Set default row height to accommodate the delete button
-        self.verticalHeader().setDefaultSectionSize(60)
+        self.verticalHeader().setDefaultSectionSize(64)
 
         self.setStyleSheet(f"""
             QTableWidget {{
                 background-color: white;
-                border-radius: 8px;
+                border-radius: 10px;
                 color: #2c3e50;
                 font-family: Poppins;
                 font-size: 10pt;
@@ -255,7 +255,7 @@ class StyledTable(QTableWidget):
                 color: #2c3e50;
             }}
             QTableWidget::item:selected {{
-                background-color: #83C5BE;
+                background-color: {ACCENT};
                 color: #2c3e50;
             }}
             QTableWidget::item:hover {{
@@ -269,13 +269,13 @@ class StyledTable(QTableWidget):
                 font-size: 11pt;
                 padding: 12px 8px;
                 border: none;
-                border-right: 1px solid #005662;
+                border-right: 1px solid {PRIMARY_HOVER};
             }}
             QHeaderView::section:last {{
                 border-right: none;
             }}
             QTableWidget::item:alternate {{
-                background-color: #F8FAFB;
+                background-color: #F6FAFD;
             }}
         """)
 
@@ -288,7 +288,7 @@ class CardFrame(QFrame):
         self.setStyleSheet("""
             QFrame {
                 background-color: white;
-                border-radius: 12px;
+                border-radius: 10px;
                 border: 1px solid #E8F4F5;
                 margin: 0px;
             }
@@ -300,7 +300,7 @@ class HeaderFrame(QFrame):
         self.setStyleSheet(f"""
             QFrame {{
                 background-color: white;
-                border-radius: 12px;
+                border-radius: 10px;
                 padding: 15px 25px;
                 border: 1px solid #E8F4F5;
                 margin: 0px;
@@ -376,8 +376,8 @@ class MonthYearSelector(QFrame):
         layout.setContentsMargins(12, 8, 12, 8)
         layout.setSpacing(12)
 
-        icon_label = QLabel("📅")
-        icon_label.setFont(QFont("Segoe UI Emoji", 16))
+        icon_label = QLabel("Date")
+        icon_label.setFont(QFont("Poppins", 12))
         icon_label.setStyleSheet("background: transparent; margin: 0px; border: none;")
         layout.addWidget(icon_label)
 
@@ -395,7 +395,7 @@ class MonthYearSelector(QFrame):
                 padding: 8px 12px;
                 background-color: {BACKGROUND};
                 border: 2px solid #E1E8ED;
-                border-radius: 8px;
+                border-radius: 10px;
                 margin: 0px;
             }}
             QComboBox:hover {{
@@ -421,7 +421,7 @@ class MonthYearSelector(QFrame):
                 background-color: white;
                 color: {PRIMARY};
                 border: 2px solid {PRIMARY};
-                border-radius: 8px;
+                border-radius: 10px;
                 selection-background-color: #E8F4F5;
                 selection-color: {PRIMARY};
                 padding: 5px;
@@ -446,7 +446,7 @@ class MonthYearSelector(QFrame):
                 padding: 8px 12px;
                 background-color: {BACKGROUND};
                 border: 2px solid #E1E8ED;
-                border-radius: 8px;
+                border-radius: 10px;
                 margin: 0px;
             }}
             QComboBox:hover {{
@@ -472,7 +472,7 @@ class MonthYearSelector(QFrame):
                 background-color: white;
                 color: {PRIMARY};
                 border: 2px solid {PRIMARY};
-                border-radius: 8px;
+                border-radius: 10px;
                 selection-background-color: #E8F4F5;
                 selection-color: {PRIMARY};
                 padding: 5px;

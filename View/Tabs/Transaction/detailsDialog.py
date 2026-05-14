@@ -84,7 +84,7 @@ class TransactionDetailsDialog(QDialog):
             # ID
             id_item = QTableWidgetItem(str(item['product_id']))
             id_item.setFont(QFont("Poppins", 9, QFont.Weight.Medium))
-            id_item.setForeground(QColor("#006D77"))
+            id_item.setForeground(QColor(PRIMARY))
             id_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             items_table.setItem(i, 0, id_item)
 
@@ -109,7 +109,7 @@ class TransactionDetailsDialog(QDialog):
             item_total = item['price'] * item['quantity']
             total_item = QTableWidgetItem(f"₱{item_total:,.2f}")
             total_item.setFont(QFont("Poppins", 9, QFont.Weight.Bold))
-            total_item.setForeground(QColor("#006D77"))
+            total_item.setForeground(QColor(PRIMARY))
             total_item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
             items_table.setItem(i, 4, total_item)
 
@@ -126,7 +126,7 @@ class TransactionDetailsDialog(QDialog):
         btn_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Print Receipt button
-        print_btn = QPushButton("🖨  Print Receipt")
+        print_btn = QPushButton("Print Receipt")
         print_btn.setMinimumHeight(45)
         print_btn.setMinimumWidth(180)
         print_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -142,10 +142,10 @@ class TransactionDetailsDialog(QDialog):
                 border: none;
             }}
             QPushButton:hover {{
-                background-color: #6FAAA4;
+                background-color: {ACCENT_HOVER};
             }}
             QPushButton:pressed {{
-                background-color: #5A9489;
+                background-color: {ACCENT_ACTIVE};
             }}
         """)
         print_btn.clicked.connect(self.on_print_receipt)
@@ -168,10 +168,10 @@ class TransactionDetailsDialog(QDialog):
                 border: none;
             }}
             QPushButton:hover {{
-                background-color: #005662;
+                background-color: {PRIMARY_HOVER};
             }}
             QPushButton:pressed {{
-                background-color: #004a54;
+                background-color: {PRIMARY_ACTIVE};
             }}
         """)
         close_btn.clicked.connect(self.close)
@@ -217,7 +217,7 @@ class TransactionDetailsDialog(QDialog):
                 msg.setWindowTitle("Receipt Generated")
                 msg.setText(
                     f"Receipt saved successfully!\n\n"
-                    f"📄 File: {filepath}\n\n"
+                    f"File: {filepath}\n\n"
                     f"Do you want to open it now?"
                 )
                 msg.setStyleSheet(f"""
@@ -244,10 +244,10 @@ class TransactionDetailsDialog(QDialog):
                         min-width: 90px;
                     }}
                     QPushButton:hover {{
-                        background-color: #005662;
+                        background-color: {PRIMARY_HOVER};
                     }}
                     QPushButton:pressed {{
-                        background-color: #004a54;
+                        background-color: {PRIMARY_ACTIVE};
                     }}
                 """)
 

@@ -130,7 +130,7 @@ class UserManagementTab(QWidget):
             if is_inactive:
                 username_item.setForeground(QColor("#999999"))
             elif is_current_user:
-                username_item.setForeground(QColor("#006D77"))
+                username_item.setForeground(QColor(PRIMARY))
             else:
                 username_item.setForeground(QColor("#2c3e50"))
 
@@ -142,7 +142,7 @@ class UserManagementTab(QWidget):
             if is_inactive:
                 role_item.setForeground(QColor("#999999"))
             elif user.role == "admin":
-                role_item.setForeground(QColor("#006D77"))
+                role_item.setForeground(QColor(PRIMARY))
             else:
                 role_item.setForeground(QColor("#6c757d"))
             role_item.setFont(QFont("Poppins", 9, QFont.Weight.Bold))

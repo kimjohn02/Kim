@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QPainter, QColor, QPen, QBrush, QLinearGradient, QFont
 from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtGui import QPolygon
+from View.colors import *
 
 
 class LineChartWidget(QWidget):
@@ -58,19 +59,23 @@ class LineChartWidget(QWidget):
             points.append(QPoint(x, y))
 
         gradient = QLinearGradient(0, padding_top, 0, padding_top + chart_h)
-        gradient.setColorAt(0, QColor(0, 109, 119, 80))
-        gradient.setColorAt(1, QColor(0, 109, 119, 0))
+        top_color = QColor(PRIMARY)
+        top_color.setAlpha(80)
+        bottom_color = QColor(PRIMARY)
+        bottom_color.setAlpha(0)
+        gradient.setColorAt(0, top_color)
+        gradient.setColorAt(1, bottom_color)
         painter.setBrush(QBrush(gradient))
         painter.setPen(Qt.PenStyle.NoPen)
         fill_points = [QPoint(padding_left, padding_top + chart_h)] + points + [QPoint(padding_left + chart_w, padding_top + chart_h)]
         painter.drawPolygon(QPolygon(fill_points))
 
         painter.setBrush(Qt.BrushStyle.NoBrush)
-        painter.setPen(QPen(QColor("#006D77"), 2))
+        painter.setPen(QPen(QColor(PRIMARY), 2))
         for i in range(len(points) - 1):
             painter.drawLine(points[i], points[i + 1])
 
-        painter.setBrush(QBrush(QColor("#006D77")))
+        painter.setBrush(QBrush(QColor(PRIMARY)))
         painter.setPen(QPen(QColor("white"), 2))
         for pt in points:
             painter.drawEllipse(pt.x() - 4, pt.y() - 4, 8, 8)

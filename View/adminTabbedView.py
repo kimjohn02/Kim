@@ -1,7 +1,7 @@
 import os
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTabWidget
-from PyQt6.QtCore import pyqtSignal, Qt
-from PyQt6.QtGui import QFont, QPixmap
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTabWidget, QFrame
+from PyQt6.QtCore import pyqtSignal, Qt, QSize
+from PyQt6.QtGui import QFont, QPixmap, QIcon
 from View.colors import *
 from View.Tabs.Overview.overviewTab import OverviewTab
 from View.Tabs.Transaction.transactionsTab import TransactionsTab
@@ -34,68 +34,125 @@ class AdminTabbedView(QWidget):
         self._connect_tab_signals()
 
     def init_ui(self):
-        main_layout = QVBoxLayout(self)
+        main_layout = QHBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
-        header_widget = QWidget()
-        header_widget.setStyleSheet(f"""
-            QWidget {{
+        # Sidebar
+        sidebar = QFrame()
+        sidebar.setFixedWidth(285)
+        sidebar.setStyleSheet("""
+            QFrame {
                 background-color: white;
-            }}
+                border-right: 1px solid #E8F4F5;
+            }
         """)
-
-        header_layout = QHBoxLayout(header_widget)
-        header_layout.setContentsMargins(25, 15, 25, 15)
-
-        logo_title_layout = QHBoxLayout()
-        logo_title_layout.setSpacing(12)
+        sidebar_layout = QVBoxLayout(sidebar)
+        sidebar_layout.setContentsMargins(18, 18, 18, 18)
+        sidebar_layout.setSpacing(12)
 
         logo_label = QLabel()
         icon_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "logo.png")
         pixmap = QPixmap(icon_path)
         if not pixmap.isNull():
-            scaled_pixmap = pixmap.scaled(135, 135, Qt.AspectRatioMode.KeepAspectRatio,
+            scaled_pixmap = pixmap.scaled(200, 200, Qt.AspectRatioMode.KeepAspectRatio,
                                           Qt.TransformationMode.SmoothTransformation)
             scaled_pixmap.setDevicePixelRatio(3.0)
             logo_label.setPixmap(scaled_pixmap)
-        logo_title_layout.addWidget(logo_label)
+        logo_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        sidebar_layout.addWidget(logo_label)
+        
+        sidebar_layout.addSpacing(8)
 
-        title = QLabel("Admin Dashboard")
-        title.setFont(QFont("Poppins", 20, QFont.Weight.Bold))
+        title = QLabel("Techserve")
+        title.setFont(QFont("Poppins", 17, QFont.Weight.Bold))
         title.setStyleSheet(f"color: {PRIMARY};")
-        logo_title_layout.addWidget(title)
+        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        sidebar_layout.addWidget(title)
 
-        header_layout.addLayout(logo_title_layout)
-        header_layout.addStretch()
-
-        logout_btn = QPushButton("Logout")
-        logout_btn.setFixedWidth(110)
-        logout_btn.setStyleSheet(f"""
+        nav_button_style = f"""
             QPushButton {{
-                background-color: {ACCENT};
-                color: white;
-                padding: 10px 16px;
-                border-radius: 6px;
+                background: transparent;
+                color: #4B5563;
+                padding: 12px 14px 12px 14px;
+                border-radius: 8px;
                 font-family: Poppins;
-                font-size: 13px;
-                font-weight: bold;
-            }}
-            QPushButton:hover {{
-                background-color: #6FAAA4;
-            }}
-            QPushButton:pressed {{
-                background-color: #5A9489;
-            }}
-            QPushButton:focus {{
-                outline: none;
+                font-size: 11pt;
+                font-weight: 500;
+                text-align: left;
                 border: none;
             }}
+            QPushButton:hover:!checked {{
+                background-color: #F3F4F6;
+                color: #111827;
+            }}
+            QPushButton:checked {{
+                background-color: {PRIMARY};
+                color: white;
+                font-weight: bold;
+            }}
+        """
+
+        self.nav_buttons = []
+        nav_icon_size = QSize(24, 24)
+        nav_items = [
+            ("Dashboard", 0, "dashboardHomeBlue.svg", "dashboardHomeWhite.svg"),
+            ("Transactions", 1, "transactionLogo.svg", "transactionLogoWhite.svg"),
+            ("User Management", 2, "userLogo.svg", "userLogoWhite.svg"),
+            ("Product Management", 3, "productLogo.svg", "productLogoWhite.svg"),
+        ]
+
+        for label, index, icon_name, active_icon_name in nav_items:
+            btn = QPushButton(label)
+            btn.setCheckable(True)
+            btn.setCursor(Qt.CursorShape.PointingHandCursor)
+            btn.setMinimumHeight(40)
+            icon_path = os.path.join(os.path.dirname(__file__), "..", "Assets", icon_name)
+            active_icon_path = os.path.join(os.path.dirname(__file__), "..", "Assets", active_icon_name)
+            btn.setProperty("icon_normal", icon_path)
+            btn.setProperty("icon_active", active_icon_path)
+            if os.path.exists(icon_path):
+                btn.setIcon(QIcon(icon_path))
+                btn.setIconSize(nav_icon_size)
+            btn.setStyleSheet(nav_button_style)
+            btn.clicked.connect(lambda checked, i=index: self.tab_widget.setCurrentIndex(i))
+            sidebar_layout.addWidget(btn)
+            self.nav_buttons.append(btn)
+
+        sidebar_layout.addStretch()
+
+        logout_btn = QPushButton("Logout")
+        logout_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        logout_icon_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "logoutRed.svg")
+        if os.path.exists(logout_icon_path):
+            logout_btn.setIcon(QIcon(logout_icon_path))
+            logout_btn.setIconSize(QSize(LOGOUT_ICON_WIDTH, LOGOUT_ICON_HEIGHT))
+        logout_btn.setFixedWidth(LOGOUT_BUTTON_WIDTH)
+        logout_btn.setStyleSheet(f"""
+            QPushButton {{
+                background-color: transparent;
+                color: {LOGOUT};
+                padding: 6px {LOGOUT_BUTTON_PADDING_X}px;
+                border-radius: 6px;
+                font-family: Poppins;
+                font-size: 13pt;
+                font-weight: bold;
+                text-align: center;
+                border: none;
+            }}
+            QPushButton:hover {{ background-color: {LOGOUT_HOVER}; }}
+            QPushButton:pressed {{ background-color: {LOGOUT_ACTIVE}; }}
         """)
         logout_btn.clicked.connect(self.logout_signal.emit)
-        header_layout.addWidget(logout_btn)
+        sidebar_layout.addWidget(logout_btn, alignment=Qt.AlignmentFlag.AlignHCenter)
 
-        main_layout.addWidget(header_widget)
+        main_layout.addWidget(sidebar)
+
+        # Content
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
+        content_layout.setContentsMargins(16, 16, 16, 16)
+        content_layout.setSpacing(0)
 
         self.tab_widget = QTabWidget()
         self.tab_widget.setStyleSheet(f"""
@@ -134,7 +191,22 @@ class AdminTabbedView(QWidget):
         self.tab_widget.addTab(self.user_mgmt_tab, "User Management")
         self.tab_widget.addTab(self.product_mgmt_tab, "Product Management")
 
-        main_layout.addWidget(self.tab_widget)
+        self.tab_widget.tabBar().hide()
+        content_layout.addWidget(self.tab_widget)
+
+        main_layout.addWidget(content_widget, 1)
+
+        if self.nav_buttons:
+            self.nav_buttons[0].setChecked(True)
+        self.tab_widget.currentChanged.connect(self._set_active_nav)
+        self._set_active_nav(self.tab_widget.currentIndex())
+
+    def _set_active_nav(self, index):
+        for i, btn in enumerate(self.nav_buttons):
+            btn.setChecked(i == index)
+            icon_path = btn.property("icon_active") if i == index else btn.property("icon_normal")
+            if icon_path and os.path.exists(icon_path):
+                btn.setIcon(QIcon(icon_path))
 
     def _connect_tab_signals(self):
         self.user_mgmt_tab.add_user_signal.connect(self.add_user_signal.emit)
@@ -152,6 +224,9 @@ class AdminTabbedView(QWidget):
         # ── Wire Overview → Transactions navigation ──────────────────
         self.overview_tab.navigate_to_transactions.connect(
             lambda: self.tab_widget.setCurrentIndex(1)
+        )
+        self.overview_tab.navigate_to_products.connect(
+            lambda: self.tab_widget.setCurrentIndex(3)
         )
 
     def update_overview(self):

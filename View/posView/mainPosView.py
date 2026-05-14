@@ -59,10 +59,10 @@ class mainPosView(QWidget):
                 border: none;
             }}
             QPushButton:hover {{
-                background-color: #005662;
+                background-color: {PRIMARY_HOVER};
             }}
             QPushButton:pressed {{
-                background-color: #004a54;
+                background-color: {PRIMARY_ACTIVE};
             }}
         """)
         self.back_to_admin_btn.clicked.connect(self.back_to_admin_signal.emit)
@@ -74,7 +74,7 @@ class mainPosView(QWidget):
         logout_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         logout_btn.setStyleSheet(f"""
             QPushButton {{
-                background-color: {ACCENT};
+                background-color: {LOGOUT};
                 color: white;
                 padding: 10px 15px;
                 border-radius: 8px;
@@ -84,10 +84,10 @@ class mainPosView(QWidget):
                 border: none;
             }}
             QPushButton:hover {{
-                background-color: #6FAAA4;
+                background-color: {LOGOUT_HOVER};
             }}
             QPushButton:pressed {{
-                background-color: #5A9489;
+                background-color: {LOGOUT_ACTIVE};
             }}
         """)
         logout_btn.clicked.connect(self.logout_signal.emit)
@@ -122,7 +122,7 @@ class mainPosView(QWidget):
         self.products_table.itemSelectionChanged.connect(self.highlight_selected_row)
         products_layout.addWidget(self.products_table)
 
-        add_btn = PrimaryButton("Add to Cart", "🛒")
+        add_btn = PrimaryButton("Add to Cart")
         add_btn.setStyleSheet(f"""
             QPushButton {{
                 background-color: {PRIMARY};
@@ -135,10 +135,10 @@ class mainPosView(QWidget):
                 border: none;
             }}
             QPushButton:hover {{
-                background-color: #005662;
+                background-color: {PRIMARY_HOVER};
             }}
             QPushButton:pressed {{
-                background-color: #004a54;
+                background-color: {PRIMARY_ACTIVE};
             }}
         """)
         add_btn.clicked.connect(self.on_add_to_cart)
@@ -209,7 +209,7 @@ class mainPosView(QWidget):
         for i, product in enumerate(products):
             id_item = QTableWidgetItem(str(product.product_id))
             id_item.setFont(QFont("Poppins", 9, QFont.Weight.Bold))
-            id_item.setForeground(QColor("#006D77"))
+            id_item.setForeground(QColor(PRIMARY))
             id_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             self.products_table.setItem(i, 0, id_item)
 
@@ -241,8 +241,8 @@ class mainPosView(QWidget):
             qty_input.setValidator(QIntValidator(1, max(1, product.stock)))
             qty_input.setMinimumWidth(120)
             qty_input.setMinimumHeight(45)
-            qty_input.setStyleSheet("""
-                QLineEdit {
+            qty_input.setStyleSheet(f"""
+                QLineEdit {{
                     color: black;
                     font-family: Poppins;
                     font-size: 14pt;
@@ -251,16 +251,16 @@ class mainPosView(QWidget):
                     padding: 12px;
                     border: 3px solid #E1E8ED;
                     border-radius: 8px;
-                }
-                QLineEdit:focus {
-                    border: 3px solid #006D77;
+                }}
+                QLineEdit:focus {{
+                    border: 3px solid {PRIMARY};
                     background-color: white;
-                }
-                QLineEdit:hover {
-                    border: 3px solid #83C5BE;
+                }}
+                QLineEdit:hover {{
+                    border: 3px solid {ACCENT};
                     background-color: white;
                     cursor: text;
-                }
+                }}
             """)
 
             container = QWidget()
@@ -303,8 +303,8 @@ class mainPosView(QWidget):
             if qty_widget:
                 qty_input = qty_widget.findChild(QLineEdit)
                 if qty_input:
-                    qty_input.setStyleSheet("""
-                        QLineEdit {
+                    qty_input.setStyleSheet(f"""
+                        QLineEdit {{
                             color: black;
                             font-family: Poppins;
                             font-size: 14pt;
@@ -313,16 +313,16 @@ class mainPosView(QWidget):
                             padding: 12px;
                             border: 3px solid #E1E8ED;
                             border-radius: 8px;
-                        }
-                        QLineEdit:focus {
-                            border: 3px solid #006D77;
+                        }}
+                        QLineEdit:focus {{
+                            border: 3px solid {PRIMARY};
                             background-color: white;
-                        }
-                        QLineEdit:hover {
-                            border: 3px solid #83C5BE;
+                        }}
+                        QLineEdit:hover {{
+                            border: 3px solid {ACCENT};
                             background-color: white;
                             cursor: text;
-                        }
+                        }}
                     """)
 
         selected_rows = self.products_table.selectedIndexes()
@@ -332,26 +332,26 @@ class mainPosView(QWidget):
             if qty_widget:
                 qty_input = qty_widget.findChild(QLineEdit)
                 if qty_input:
-                    qty_input.setStyleSheet("""
-                        QLineEdit {
+                    qty_input.setStyleSheet(f"""
+                        QLineEdit {{
                             color: black;
                             font-family: Poppins;
                             font-size: 14pt;
                             font-weight: bold;
-                            background-color: #83C5BE;
+                            background-color: {ACCENT};
                             padding: 12px;
                             border: 3px solid #E1E8ED;
                             border-radius: 8px;
-                        }
-                        QLineEdit:focus {
-                            border: 3px solid #006D77;
-                            background-color: #83C5BE;
-                        }
-                        QLineEdit:hover {
-                            border: 3px solid #83C5BE;
-                            background-color: #83C5BE;
+                        }}
+                        QLineEdit:focus {{
+                            border: 3px solid {PRIMARY};
+                            background-color: {ACCENT};
+                        }}
+                        QLineEdit:hover {{
+                            border: 3px solid {ACCENT};
+                            background-color: {ACCENT};
                             cursor: text;
-                        }
+                        }}
                     """)
 
     def on_add_to_cart(self):

@@ -18,8 +18,8 @@ class ProductManagementTab(QWidget):
 
         product_frame = CardFrame()
         product_layout = QVBoxLayout(product_frame)
-        product_layout.setContentsMargins(20, 25, 20, 25)
-        product_layout.setSpacing(15)
+        product_layout.setContentsMargins(20, 20, 20, 20)
+        product_layout.setSpacing(10)
 
         product_layout.addWidget(SectionLabel("Add New Product"))
         product_layout.addWidget(SubtitleLabel("Fill in the details below"))
@@ -36,20 +36,20 @@ class ProductManagementTab(QWidget):
         self.product_stock = QSpinBox()
         self.product_stock.setRange(0, 10000)
         self.product_stock.setPrefix("Stock: ")
-        self.product_stock.setStyleSheet("""
-            QSpinBox {
+        self.product_stock.setStyleSheet(f"""
+            QSpinBox {{
                 font-family: Poppins; 
                 font-size: 10pt;
                 color: black; 
                 padding: 10px 12px; 
                 background-color: #F8FAFB; 
                 border: 2px solid #E1E8ED; 
-                border-radius: 8px;
-            }
-            QSpinBox:focus {
-                border: 2px solid #006D77;
+                border-radius: 10px;
+            }}
+            QSpinBox:focus {{
+                border: 2px solid {PRIMARY};
                 background-color: white;
-            }
+            }}
         """)
         product_layout.addWidget(self.product_stock)
 
@@ -61,7 +61,7 @@ class ProductManagementTab(QWidget):
         view_frame = CardFrame()
         view_layout = QVBoxLayout(view_frame)
         view_layout.setContentsMargins(25, 25, 25, 25)
-        view_layout.setSpacing(15)
+        view_layout.setSpacing(12)
 
         header_layout = QHBoxLayout()
         header_layout.setSpacing(16)
@@ -70,7 +70,7 @@ class ProductManagementTab(QWidget):
         icon_path = os.path.join(os.path.dirname(__file__), "..", "..", "Assets", "productLogo.svg")
         pixmap = QPixmap(icon_path)
         if not pixmap.isNull():
-            scaled_pixmap = pixmap.scaled(45, 45, Qt.AspectRatioMode.KeepAspectRatio,
+            scaled_pixmap = pixmap.scaled(32, 32, Qt.AspectRatioMode.KeepAspectRatio,
                                           Qt.TransformationMode.SmoothTransformation)
             logo_label.setPixmap(scaled_pixmap)
         header_layout.addWidget(logo_label)
@@ -95,8 +95,8 @@ class ProductManagementTab(QWidget):
         self.products_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         view_layout.addWidget(self.products_table)
 
-        main_layout.addWidget(product_frame, 25)
-        main_layout.addWidget(view_frame, 75)
+        main_layout.addWidget(product_frame, 22)
+        main_layout.addWidget(view_frame, 78)
 
     def show_error(self, title, message):
         QMessageBox.warning(self, title, message)
@@ -143,7 +143,7 @@ class ProductManagementTab(QWidget):
             self.products_table.setItem(i, 1, name_item)
 
             price_item = QTableWidgetItem(f"₱{product.price:,.2f}")
-            price_item.setForeground(QColor("#006D77"))
+            price_item.setForeground(QColor(PRIMARY))
             price_item.setFont(QFont("Poppins", 10, QFont.Weight.Bold))
             price_item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
             self.products_table.setItem(i, 2, price_item)
